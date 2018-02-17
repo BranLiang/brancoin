@@ -1,4 +1,4 @@
-package main
+package core
 
 type TXOutput struct {
 	Value      int
