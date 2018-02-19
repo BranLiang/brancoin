@@ -14,6 +14,8 @@ var printChainCmd = &cobra.Command{
 	Short: "Print all block info in chain.",
 	Run: func(cmd *cobra.Command, args []string) {
 		bc := core.NewBlockchain(nodeID)
+		defer bc.DB.Close()
+
 		bci := bc.Iterator()
 
 		for {

@@ -15,7 +15,7 @@ const genesisCoinbaseData = "The Times 03/Jan/2009 Chancellor on brink of second
 // 区块链
 type Blockchain struct {
 	tip []byte
-	db  *bolt.DB
+	DB  *bolt.DB
 }
 
 // 创建一个新的数据库db文件
@@ -35,7 +35,6 @@ func CreateBlockchain(address, nodeID string) *Blockchain {
 	if err != nil {
 		log.Panic(err)
 	}
-	defer db.Close()
 
 	err = db.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucket([]byte(blocksBucket))
@@ -82,7 +81,6 @@ func NewBlockchain(nodeID string) *Blockchain {
 	if err != nil {
 		log.Panic(err)
 	}
-	defer db.Close()
 
 	err = db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(blocksBucket))
@@ -146,7 +144,7 @@ func (bc *Blockchain) FindUTXO() map[string]TXOutputs {
 }
 
 func (bc *Blockchain) Iterator() *BlockchainIterator {
-	bci := &BlockchainIterator{bc.tip, bc.db}
+	bci := &BlockchainIterator{bc.tip, bc.DB}
 
 	return bci
 }

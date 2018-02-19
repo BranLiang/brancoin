@@ -14,7 +14,7 @@ type UTXOSet struct {
 }
 
 func (u UTXOSet) Reindex() {
-	db := u.Blockchain.db
+	db := u.Blockchain.DB
 	bucketName := []byte(utxoBucket)
 
 	err := db.Update(func(tx *bolt.Tx) error {

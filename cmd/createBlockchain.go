@@ -13,10 +13,14 @@ var createBlockchainCmd = &cobra.Command{
 	Use:   "createBlockchain",
 	Short: "Create a new blockchain with coinbase transaction.",
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			log.Panic("ERROR: Address is not given")
+		}
 		if !core.ValidateAddress(args[0]) {
 			log.Panic("ERROR: Address is not valid")
 		}
 		bc := core.CreateBlockchain(args[0], nodeID)
+		defer bc.DB.Close()
 
 		UTXOset := core.UTXOSet{Blockchain: bc}
 		UTXOset.Reindex()
