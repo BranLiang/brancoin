@@ -64,10 +64,10 @@ func (u UTXOSet) FindUTXO(pubKeyHash []byte) []TXOutput {
 		c := b.Cursor()
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
-			outs := DeserializeBlock(v)
+			outs := DeserializeOutputs(v)
 
 			for _, out := range outs.Outputs {
-				if out.IsLockWithKey(pubKeyHash) {
+				if out.IsLockedWithKey(pubKeyHash) {
 					UTXOs = append(UTXOs, out)
 				}
 			}

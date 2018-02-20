@@ -21,6 +21,10 @@ func (out *TXOutput) Lock(address []byte) {
 	out.PubKeyHash = pubKeyHash
 }
 
+func (out *TXOutput) IsLockedWithKey(pubKeyHash []byte) bool {
+	return bytes.Compare(out.PubKeyHash, pubKeyHash) == 0
+}
+
 func NewTXOutput(value int, address string) *TXOutput {
 	txo := &TXOutput{value, nil}
 	txo.Lock([]byte(address))
@@ -38,4 +42,16 @@ func (outs TXOutputs) Serialize() []byte {
 	}
 
 	return buff.Bytes()
+}
+
+func DeserializeOutputs(data []byte) TXOutputs {
+	var outputs TXOutputs
+
+	dec := gob.NewDecoder(bytes.NewReader(data))
+	err := dec.Decode(&outputs)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return outputs
 }

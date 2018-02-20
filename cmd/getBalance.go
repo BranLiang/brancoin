@@ -22,13 +22,13 @@ var getBalanceCmd = &cobra.Command{
 			log.Panic("ERROR: Address is not valid")
 		}
 		bc := core.NewBlockchain(nodeID)
-		UTXOSet := core.UTXOSet{bc}
+		UTXOSet := core.UTXOSet{Blockchain: bc}
 		defer bc.DB.Close()
 
 		balance := 0
 		pubKeyHash := core.Base58Decode([]byte(args[0]))
 		pubKeyHash = pubKeyHash[1 : len(pubKeyHash)-4]
-		UTXOs := core.UTXOSet.FindUTXO(pubKeyHash)
+		UTXOs := UTXOSet.FindUTXO(pubKeyHash)
 
 		for _, out := range UTXOs {
 			balance += out.Value
