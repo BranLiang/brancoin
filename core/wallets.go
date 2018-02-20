@@ -25,6 +25,10 @@ func NewWallets(nodeID string) (*Wallets, error) {
 	return &wallets, err
 }
 
+func (ws Wallets) GetWallet(address string) Wallet {
+	return *ws.Wallets[address]
+}
+
 func (ws *Wallets) CreateWallet() string {
 	wallet := NewWallet()
 	address := fmt.Sprintf("%s", wallet.GetAddress())
