@@ -43,7 +43,7 @@ var sendCmd = &cobra.Command{
 			newBlock := bc.MineBlock(txs)
 			UTXOSet.Update(newBlock)
 		} else {
-			core.SendTx(knownNodes[0], tx)
+			fmt.Println("Not implemented!")
 		}
 
 		fmt.Println("Success!")
