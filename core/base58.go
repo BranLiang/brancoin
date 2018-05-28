@@ -5,6 +5,7 @@ import (
 	"math/big"
 )
 
+// Exclude I(capital i), l(lower case L), o, 0, + and / compared with classical base64 encoding
 var b58Alphabet = []byte("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
 
 func Base58Encode(input []byte) []byte {

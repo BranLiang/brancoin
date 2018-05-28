@@ -106,13 +106,16 @@ func (bc *Blockchain) FindUTXO() map[string]TXOutputs {
 	spentTXOs := make(map[string][]int)
 	bci := bc.Iterator()
 
+	// 遍历所有的block
 	for {
 		block := bci.Next()
 
+		// 遍历block的所有transactions
 		for _, tx := range block.Transactions {
 			txID := hex.EncodeToString(tx.ID)
 
-			// 首先记录交易的Input，zz
+			// 首先记录交易的Input，key为transaction ID, 值为vout的index array
+			// 有可能该交易的input来自同一个交易的多个vout
 			if tx.IsCoinbase() == false {
 				for _, in := range tx.Vin {
 					inTxID := hex.EncodeToString(in.Txid)
@@ -190,6 +193,7 @@ func (bc *Blockchain) MineBlock(transactions []*Transaction) *Block {
 	var lastHash []byte
 	var lastHeight int
 
+	// All transactions should be valid
 	for _, tx := range transactions {
 		if bc.VerifyTransaction(tx) != true {
 			log.Panic("ERROR: Invalid transaction")

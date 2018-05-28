@@ -15,6 +15,7 @@ type TXOutputs struct {
 	Outputs []TXOutput
 }
 
+// Set pubKeyHash for the TXOutput
 func (out *TXOutput) Lock(address []byte) {
 	pubKeyHash := Base58Decode(address)
 	pubKeyHash = pubKeyHash[1 : len(pubKeyHash)-4]

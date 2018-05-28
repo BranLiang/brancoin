@@ -14,6 +14,7 @@ import (
 	"strings"
 )
 
+// Amount of the mining reward
 const subsidy = 10
 
 type Transaction struct {
