@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 )
 
 const walletFile = "wallet_%s.dat"
@@ -88,4 +89,16 @@ func (ws Wallets) SaveToFile(nodeID string) {
 	if err != nil {
 		log.Panic(err)
 	}
+}
+
+func (ws Wallets) String() string {
+	var lines []string
+
+	for address, wallet := range ws.Wallets {
+		lines = append(lines, fmt.Sprintf("--- Wallet %s:", address))
+		lines = append(lines, fmt.Sprintf("       PrivateKey:  %x", wallet.PrivateKey.D.Bytes()))
+		lines = append(lines, fmt.Sprintf("       PublicKey: %x", wallet.PublicKey))
+	}
+
+	return strings.Join(lines, "\n")
 }

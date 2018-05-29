@@ -163,6 +163,7 @@ func (bc *Blockchain) SignTransaction(tx *Transaction, privateKey ecdsa.PrivateK
 	tx.Sign(privateKey, prevTXs)
 }
 
+// 遍历blockchain的所有block及其下面的transactions
 func (bc *Blockchain) FindTransaction(ID []byte) (Transaction, error) {
 	bci := bc.Iterator()
 
