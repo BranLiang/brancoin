@@ -194,7 +194,7 @@ func NewUTXOTransaction(wallet *Wallet, to string, amount int, UTXOSet *UTXOSet)
 		log.Panic("ERROR: Not enough funds")
 	}
 
-	// Build  a list of inputs
+	// Build  a list of inputs, all validOutputs are used
 	for txid, outs := range validOutputs {
 		txID, err := hex.DecodeString(txid)
 		if err != nil {
@@ -211,7 +211,7 @@ func NewUTXOTransaction(wallet *Wallet, to string, amount int, UTXOSet *UTXOSet)
 	from := fmt.Sprintf("%s", wallet.GetAddress())
 	outputs = append(outputs, *NewTXOutput(amount, to))
 	if acc > amount {
-		outputs = append(outputs, *NewTXOutput(acc-amount, from))
+		outputs = append(outputs, *NewTXOutput(acc-amount, from)) // change money to the sender
 	}
 
 	tx := Transaction{nil, inputs, outputs}

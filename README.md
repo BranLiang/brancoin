@@ -58,3 +58,11 @@ PoW: true
        Value:  10
        Script: c0f3a5185313c61c482d3b41335a9c31bbe65de4
 ```
+
+Make transactions
+```shell
+$ brancoin send -f 1JbEcaQoX52MsacPJmFZcs5xkNfrFQrqax -t 18PQQ2vSoFuzKbqJzLF3U5u29pAVh6VJfs -a 1
+61995dcd8194235a17882f64dd34e68cf4f68f75f1f430c7c91cfc1931a9671e
+
+Success!
+```
