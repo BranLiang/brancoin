@@ -101,6 +101,7 @@ func NewBlockchain(nodeID string) *Blockchain {
 	return &bc
 }
 
+// 这个index方法应该有问题
 func (bc *Blockchain) FindUTXO() map[string]TXOutputs {
 	UTXO := make(map[string]TXOutputs)
 	spentTXOs := make(map[string][]int)
