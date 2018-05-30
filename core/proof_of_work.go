@@ -12,7 +12,7 @@ var (
 	maxNounce = math.MaxInt64
 )
 
-const targetBits = 24
+const targetBits = 22
 
 type ProofOfWork struct {
 	block  *Block
