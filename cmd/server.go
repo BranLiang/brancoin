@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/branLiang/brancoin/core"
 	"github.com/spf13/cobra"
