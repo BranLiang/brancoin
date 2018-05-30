@@ -43,7 +43,7 @@ var sendCmd = &cobra.Command{
 			newBlock := bc.MineBlock(txs)
 			UTXOSet.Update(newBlock)
 		} else {
-			fmt.Println("Not implemented!")
+			core.SendTx(core.KnownNodes[0], tx)
 		}
 
 		fmt.Println("Success!")
@@ -64,5 +64,5 @@ func init() {
 	sendCmd.Flags().StringVarP(&from, "from", "f", "", "Brancoin sender")
 	sendCmd.Flags().StringVarP(&to, "to", "t", "", "Brancoin receiver")
 	sendCmd.Flags().IntVarP(&amount, "amount", "a", 0, "Amount of brancoin to send with")
-	sendCmd.Flags().BoolVarP(&mineNow, "mineNow", "m", true, "Decided if should mine the block now")
+	sendCmd.Flags().BoolVarP(&mineNow, "mineNow", "m", false, "Decided if should mine the block now")
 }
