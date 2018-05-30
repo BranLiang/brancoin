@@ -66,3 +66,52 @@ $ brancoin send -f 1JbEcaQoX52MsacPJmFZcs5xkNfrFQrqax -t 18PQQ2vSoFuzKbqJzLF3U5u
 
 Success!
 ```
+
+## Using Server
+
+Set the env NODE_ID for seed server
+```shell
+$ export NODE_ID=3000
+```
+
+Create a miner address
+```shell
+$ brancoin createWallet
+1QGohn5KECjrn7P9M8ALuWNgPbZgebyxDQ
+```
+
+Create a new blockchain
+```shell
+$ brancoin createBlockchain 1QGohn5KECjrn7P9M8ALuWNgPbZgebyxDQ
+7dfb0853887b21d49ab8d892bcafb80dc78fc189da2621d301f7e7ec3fb60bf8
+
+Done!
+```
+
+Backup the blockchain
+```shell
+$ cp blockchain_3000.db blockchain_genesis.db
+```
+
+Go to another terminal, set another NODE_ID and create some addresses there
+```shell
+$ export NODE_ID=3001
+$ brancoin createWallet
+$ brancoin createWallet
+```
+
+Go to the seed terminal, start the seed server
+```shell
+$ brancoin server
+```
+
+Go to the 3001 tab, initialize the database and start the server
+```shell
+$ cp blockchain_genesis.db blockchain_3001.db
+$ brancoin server
+```
+
+Setup the miner node, go to another tab and set the NODE_ID to 3002
+```shell
+$ export NODE_ID=3002
+```
