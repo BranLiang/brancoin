@@ -51,10 +51,10 @@ type tx struct {
 	Transaction []byte
 }
 
-type verzion struct {
-	Version    int
-	BestHeight int
-	AddrFrom   string
+type version struct {
+	Version    int    // Blockchain version
+	BestHeight int    // length of the node's blockchain
+	AddrFrom   string // address of the sender
 }
 
 func commandToBytes(command string) []byte {
@@ -106,6 +106,7 @@ func sendBlock(addr string, b *Block) {
 	sendData(addr, request)
 }
 
+// connect to address addr, and send the date to that addr
 func sendData(addr string, data []byte) {
 	conn, err := net.Dial(protocol, addr)
 	if err != nil {
@@ -139,7 +140,15 @@ func sendInv(address, kind string, items [][]byte) {
 	sendData(address, request)
 }
 
+// get blocks from address
 func sendGetBlocks(address string) {
+	payload := gobEncode(getblocks{nodeAddress})
+	request := append(commandToBytes("getblocks"), payload...)
+
+	sendData(address, request)
+}
+
+func sendGetData(address string, kind string, id []byte) {
 	payload := gobEncode(getData{nodeAddress, kind, id})
 	request := append(commandToBytes("getdata"), payload...)
 
@@ -154,9 +163,11 @@ func sendTx(addr string, tnx *Transaction) {
 	sendData(addr, request)
 }
 
+// blockchain belongs to current node users
 func sendVersion(addr string, bc *Blockchain) {
 	bestHeight := bc.GetBestHeight()
-	payload := gobEncode(verzion{nodeVersion, BestHeight, nodeAddress})
+	// current node version
+	payload := gobEncode(version{nodeVersion, BestHeight, nodeAddress})
 	request := append(commandToBytes("version"), payload...)
 
 	sendData(addr, request)
@@ -355,7 +366,7 @@ func handleTx(request []byte, bc *Blockchain) {
 
 func handleVersion(request []byte, bc *Blockchain) {
 	var buff bytes.Buffer
-	var payload verzion
+	var payload version
 
 	buff.Write(request[commandLength:])
 	dec := gob.NewDecoder(&buff)
@@ -367,12 +378,13 @@ func handleVersion(request []byte, bc *Blockchain) {
 	myBestHeight := bc.GetBestHeight()
 	foreignerBestHeight := payload.BestHeight
 
-	if myBestHeight < foreignerBestHeight {
+	if myBestHeight < foreignerBestHeight { // I am out of dated
 		sendGetBlocks(payload.AddrFrom)
-	} else if myBestHeight > foreignerBestHeight {
+	} else if myBestHeight > foreignerBestHeight { // I am newer
 		sendVersion(payload.AddrFrom, bc)
 	}
 
+	// Add knownNodes if the senders address is unknow
 	if !nodeIsKnown(payload.AddrFrom) {
 		knownNodes = append(knownNodes, payload.AddrFrom)
 	}
@@ -395,6 +407,8 @@ func handleConnection(conn net.Conn, bc *Blockchain) {
 		handleinv(request, bc)
 	case "getblocks":
 		handleGetBlocks(request, bc)
+	case "getdata":
+		handleGetData(request, bc)
 	case "tx":
 		handleTx(request, bc)
 	case "version":
@@ -407,6 +421,7 @@ func handleConnection(conn net.Conn, bc *Blockchain) {
 }
 
 func StartServer(nodeID, minerAddress string) {
+	// initialize the nodeAddress and miningAddress
 	nodeAddress = fmt.Sprintf("localhost:%s", nodeID)
 	miningAddress = minerAddress
 	ln, err := net.Listen(protocol, nodeAddress)
@@ -417,7 +432,8 @@ func StartServer(nodeID, minerAddress string) {
 
 	bc := NewBlockchain(nodeID)
 
-	if nodeAddress !knownNodes[0] {
+	if nodeAddress != knownNodes[0] {
+		// Talk to the central node and check if outdated
 		sendVersion(knownNodes[0], bc)
 	}
 
@@ -443,7 +459,7 @@ func gobEncode(data interface{}) []byte {
 }
 
 func nodeIsKnown(addr string) bool {
-	for _, node := range =knownNodes {
+	for _, node := range knownNodes {
 		if node == addr {
 			return true
 		}

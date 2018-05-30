@@ -14,7 +14,7 @@ type Block struct {
 	PrevBlockHash []byte         // 上一个区块的哈希
 	Hash          []byte         // 当前区块的哈希
 	Nonce         int            // 用于计算当前区块哈希值
-	Height        int            // ？
+	Height        int            // Increment
 }
 
 // 创建新的区块
