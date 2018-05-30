@@ -1,4 +1,4 @@
-package code
+package core
 
 import (
 	"bytes"
@@ -51,7 +51,7 @@ type tx struct {
 	Transaction []byte
 }
 
-type version struct {
+type verzion struct {
 	Version    int    // Blockchain version
 	BestHeight int    // length of the node's blockchain
 	AddrFrom   string // address of the sender
@@ -95,7 +95,7 @@ func sendAddr(address string) {
 	payload := gobEncode(nodes)
 	request := append(commandToBytes("addr"), payload...)
 
-	sendDate(address, request)
+	sendData(address, request)
 }
 
 func sendBlock(addr string, b *Block) {
@@ -149,7 +149,7 @@ func sendGetBlocks(address string) {
 }
 
 func sendGetData(address string, kind string, id []byte) {
-	payload := gobEncode(getData{nodeAddress, kind, id})
+	payload := gobEncode(getdata{nodeAddress, kind, id})
 	request := append(commandToBytes("getdata"), payload...)
 
 	sendData(address, request)
@@ -167,7 +167,7 @@ func sendTx(addr string, tnx *Transaction) {
 func sendVersion(addr string, bc *Blockchain) {
 	bestHeight := bc.GetBestHeight()
 	// current node version
-	payload := gobEncode(version{nodeVersion, BestHeight, nodeAddress})
+	payload := gobEncode(verzion{nodeVersion, bestHeight, nodeAddress})
 	request := append(commandToBytes("version"), payload...)
 
 	sendData(addr, request)
@@ -210,7 +210,7 @@ func handleBlock(request []byte, bc *Blockchain) {
 
 	if len(blocksInTransit) > 0 {
 		blockHash := blocksInTransit[0]
-		sendGetBlocks(payload.AddrFrom, "block", blockHash)
+		sendGetData(payload.AddrFrom, "block", blockHash)
 
 		blocksInTransit = blocksInTransit[1:]
 	} else {
@@ -366,7 +366,7 @@ func handleTx(request []byte, bc *Blockchain) {
 
 func handleVersion(request []byte, bc *Blockchain) {
 	var buff bytes.Buffer
-	var payload version
+	var payload verzion
 
 	buff.Write(request[commandLength:])
 	dec := gob.NewDecoder(&buff)
@@ -449,7 +449,7 @@ func StartServer(nodeID, minerAddress string) {
 func gobEncode(data interface{}) []byte {
 	var buff bytes.Buffer
 
-	enc := gob.NewDecoder(&buff)
+	enc := gob.NewEncoder(&buff)
 	err := enc.Encode(data)
 	if err != nil {
 		log.Panic(err)
