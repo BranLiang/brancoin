@@ -16,7 +16,7 @@ var createWalletCmd = &cobra.Command{
 		address := wallets.CreateWallet()
 		wallets.SaveToFile(nodeID)
 
-		fmt.Printf("Your new address: %s\n", address)
+		fmt.Println(address)
 	},
 }
 
