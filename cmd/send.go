@@ -36,7 +36,7 @@ var sendCmd = &cobra.Command{
 
 		tx := core.NewUTXOTransaction(&wallet, to, amount, &UTXOSet)
 
-		if mineNow {
+		if mineNow == true {
 			cbTx := core.NewCoinbaseTX(from, "")
 			txs := []*core.Transaction{cbTx, tx}
 
