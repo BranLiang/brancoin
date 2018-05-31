@@ -25,7 +25,7 @@ echo "7. Copy genesis blockchain"
 cp blockchain_genesis.db blockchain_3001.db
 
 echo "8. Set the miner node NODE_ID=3002"
-export NODE_ID=3001
+export NODE_ID=3002
 
 echo "9. Create miner wallet"
 brancoin createWallet
