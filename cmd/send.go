@@ -37,12 +37,14 @@ var sendCmd = &cobra.Command{
 		tx := core.NewUTXOTransaction(&wallet, to, amount, &UTXOSet)
 
 		if mineNow == true {
+			fmt.Println("Mining now!")
 			cbTx := core.NewCoinbaseTX(from, "")
 			txs := []*core.Transaction{cbTx, tx}
 
 			newBlock := bc.MineBlock(txs)
 			UTXOSet.Update(newBlock)
 		} else {
+			fmt.Println("Send to the mining pool!")
 			core.SendTx(core.KnownNodes[0], tx)
 		}
 
